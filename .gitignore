@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+**/node_modules/
+
+# Python Virtual Environment and cache
+backend/.venv/
+backend/venv/
+**/__pycache__/
+*.pyc
+
+# Local databases and SQLite DBs
+*.db
+backend/*.db
+backend/vistaar.db
+backend/vistaarwater.db
+
+# Build artifacts
+frontend/dist/
+studio-next/.next/
+studio-next/out/
+
+# Local configuration files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Scratch folder
+scratch/

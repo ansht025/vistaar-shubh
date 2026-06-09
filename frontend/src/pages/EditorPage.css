@@ -1,0 +1,763 @@
+/* --- Canva Mode Base Layout --- */
+.editor-page.canva-mode {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 0%, #0d1e36 0%, #060c17 100%);
+  color: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+}
+
+/* --- Top Header Bar --- */
+.studio-topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(11, 22, 44, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 100;
+}
+
+.studio-topbar h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Main Editor Shell Workspace --- */
+.studio-shell {
+  display: grid;
+  grid-template-columns: 80px 280px 1fr 300px;
+  height: calc(100vh - 64px);
+  width: 100%;
+  overflow: hidden;
+}
+
+/* --- Far-Left Icon Navigation Navbar --- */
+.studio-navbar {
+  background: #080f1e;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+  gap: 4px;
+  z-index: 80;
+}
+
+.nav-tab {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.68rem;
+  font-weight: 500;
+  gap: 6px;
+  margin: 0 4px;
+}
+
+.nav-tab:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-tab.active {
+  color: #3b52f6;
+  background: rgba(59, 82, 246, 0.12);
+  border-left: 3px solid #3b52f6;
+  border-radius: 0 12px 12px 0;
+}
+
+/* --- Expandable Details Tool Drawer --- */
+.tool-drawer {
+  background: rgba(10, 18, 36, 0.95);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 70;
+}
+
+.tool-drawer h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin-bottom: 4px;
+}
+
+.tool-drawer h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 10px;
+}
+
+/* --- Search and Grid Toggles --- */
+.drawer-search-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.drawer-search-box input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.drawer-search-box input:focus {
+  outline: none;
+  border-color: #3b52f6;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.template-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.template-item {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  background: #0f172a;
+  text-align: left;
+  color: #e2e8f0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.template-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.template-item img {
+  width: 100%;
+  aspect-ratio: 5/3;
+  object-fit: cover;
+  display: block;
+}
+
+.template-item span {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 10px;
+}
+
+.template-item.selected {
+  border-color: #3b52f6;
+  box-shadow: 0 0 0 2px rgba(59, 82, 246, 0.3), 0 8px 20px rgba(59, 82, 246, 0.2);
+}
+
+/* --- Color and Shapes Widgets --- */
+.color-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.palette-color-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.palette-color-btn:hover {
+  transform: scale(1.1);
+  border-color: #fff;
+}
+
+.shape-adder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.shape-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.shape-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #3b52f6;
+}
+
+.circle-shape-mock {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.line-shape-mock {
+  width: 28px;
+  height: 2px;
+  background: currentColor;
+  margin: 11px 0;
+}
+
+.triangle-shape-mock {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 22px solid currentColor;
+  margin: 1px 0;
+}
+
+.star-shape-mock {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  display: inline-block;
+}
+.star-shape-mock::before {
+  content: '★';
+  font-size: 26px;
+  line-height: 1;
+  color: currentColor;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.enhance-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  user-select: none;
+}
+.enhance-toggle-label input[type="checkbox"] {
+  accent-color: #10b981;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.enhance-toggle-label span {
+  letter-spacing: 0.3px;
+}
+
+.logo-upload-zone {
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.logo-upload-zone:hover {
+  border-color: #3b52f6;
+  background: rgba(59, 82, 246, 0.03);
+}
+
+.logo-upload-zone input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.mock-video-container {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #000;
+  aspect-ratio: 16/9;
+}
+
+.mock-video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Center Workspace Canvas Layout --- */
+.studio-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  overflow: auto;
+  min-width: 0;
+}
+
+.studio-workspace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* --- Image 1 Header Actions Toolbar --- */
+.editor-top-actions-bar {
+  width: 100%;
+  height: 48px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.top-actions-left,
+.top-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.action-btn:hover:not(:disabled) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.action-btn.active {
+  color: #3b52f6;
+  background: rgba(59, 82, 246, 0.1);
+}
+
+.action-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.action-btn.text-danger:hover:not(:disabled) {
+  color: #f43f5e;
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.btn-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 4px;
+}
+
+/* Modifiers Dropdowns / Popups */
+.action-group {
+  position: relative;
+}
+
+.opacity-slider-popup,
+.layer-actions-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  min-width: 140px;
+}
+
+.opacity-slider-popup {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.opacity-slider-popup input[type="range"] {
+  flex: 1;
+}
+
+.opacity-val {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3b52f6;
+  width: 32px;
+  text-align: right;
+}
+
+.layer-actions-popup button {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  text-align: left;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.layer-actions-popup button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Canvas Stage Wrapping --- */
+.canvas-stage {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #040914;
+  padding: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.canvas-stage canvas {
+  border-radius: 8px;
+  display: block;
+}
+
+/* --- Image 3 Workspace Footer Bar --- */
+.editor-footer-bar {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.footer-btn {
+  height: 42px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-share {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}
+
+.btn-share:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-save {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}
+
+.btn-save:hover {
+  background: #334155;
+}
+
+.btn-download {
+  background: #3b52f6;
+  border: none;
+  color: #fff;
+}
+
+.btn-download:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 14px rgba(59, 82, 246, 0.3);
+}
+
+.btn-print {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.btn-print:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* --- Right Sidebar Branding / Order Panel --- */
+.studio-right {
+  background: rgba(11, 22, 44, 0.85);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 70;
+}
+
+.right-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.right-panel-section h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.right-panel-section label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.right-panel-section .input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+}
+
+.right-panel-section .input:focus {
+  outline: none;
+  border-color: #3b52f6;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.price-box {
+  margin-top: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.status-row {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.status-row strong {
+  color: #3b52f6;
+}
+
+/* --- Code Export Layout --- */
+.code-format-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.fmt-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fmt-btn:hover {
+  color: #fff;
+}
+
+.fmt-btn.active {
+  background: #3b52f6;
+  color: #fff;
+}
+
+.code-display-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.code-box {
+  background: #020617;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin: 0;
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  font-size: 0.72rem;
+  color: #38bdf8;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.copy-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  padding: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #3b52f6;
+  color: #fff;
+}
+
+/* --- Shared Flex and Helper Classes --- */
+.flex-row {
+  display: flex;
+  gap: 8px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 8px 0;
+}
+
+.assistant-note {
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.assistant-note.error {
+  color: #ef4444;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1440px) {
+  .studio-shell {
+    grid-template-columns: 80px 240px 1fr 280px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .studio-shell {
+    grid-template-columns: 80px 240px 1fr;
+  }
+  .studio-right {
+    display: none; /* Hide right bar, could be sidebar drawer or layout change on tablet */
+  }
+}
+
+@media (max-width: 900px) {
+  .studio-shell {
+    grid-template-columns: 80px 1fr;
+  }
+  .tool-drawer {
+    display: none;
+  }
+}
