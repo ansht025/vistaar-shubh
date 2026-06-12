@@ -106,3 +106,26 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
+@media (hover: none), (max-width: 768px) {
+  .design-overlay {
+    position: static;
+    opacity: 1;
+    background: var(--bg-secondary);
+    padding: 12px;
+  }
+  .overlay-content {
+    width: 100%;
+    flex-direction: row;
+    transform: none;
+  }
+  .overlay-content .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .overlay-content {
+    flex-direction: column;
+  }
+}

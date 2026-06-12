@@ -9,6 +9,10 @@
   overflow: hidden;
 }
 
+.editor-page.canva-mode + .footer {
+  display: none;
+}
+
 /* --- Top Header Bar --- */
 .studio-topbar {
   height: 64px;
@@ -749,15 +753,116 @@
     grid-template-columns: 80px 240px 1fr;
   }
   .studio-right {
-    display: none; /* Hide right bar, could be sidebar drawer or layout change on tablet */
+    display: none;
   }
 }
 
 @media (max-width: 900px) {
+  .editor-page.canva-mode {
+    overflow: visible;
+  }
+  .studio-topbar {
+    height: auto;
+    min-height: 60px;
+    padding: 10px 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .studio-topbar h2 {
+    font-size: 1rem;
+  }
   .studio-shell {
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100dvh - 60px);
+    overflow: visible;
+    padding-bottom: 76px;
+  }
+  .studio-navbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 68px;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 6px 10px max(6px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 0;
+    overflow-x: auto;
+    z-index: 200;
+  }
+  .nav-tab {
+    width: 64px;
+    min-width: 64px;
+    height: 54px;
+    margin: 0;
+  }
+  .nav-tab.active {
+    border-left: 0;
+    border-bottom: 3px solid #3b52f6;
+    border-radius: 10px;
   }
   .tool-drawer {
     display: none;
+  }
+  .studio-center {
+    padding: 20px 16px;
+    align-items: flex-start;
+  }
+  .editor-top-actions-bar {
+    height: auto;
+    min-height: 48px;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+  .top-actions-left,
+  .top-actions-right {
+    flex-shrink: 0;
+  }
+  .canvas-stage {
+    overflow: hidden;
+    justify-content: center;
+    padding: 10px;
+  }
+  .canvas-stage .canvas-container {
+    zoom: 0.8;
+  }
+  .editor-footer-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .studio-topbar {
+    padding: 8px 12px;
+  }
+  .studio-topbar h2 {
+    width: 100%;
+    font-size: 0.92rem;
+  }
+  .studio-center {
+    padding: 12px 10px;
+  }
+  .studio-workspace {
+    gap: 10px;
+  }
+  .action-btn {
+    padding: 0 9px;
+    font-size: 0.72rem;
+  }
+  .canvas-stage {
+    border-radius: 10px;
+    padding: 6px;
+  }
+  .canvas-stage .canvas-container {
+    zoom: 0.39;
+  }
+  .editor-footer-bar {
+    gap: 8px;
+  }
+  .footer-btn {
+    height: 40px;
+    font-size: 0.75rem;
   }
 }

@@ -86,6 +86,25 @@ body {
   min-height: 100dvh;
 }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+main {
+  min-width: 0;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -329,7 +348,7 @@ select.input { cursor: pointer; }
 
 /* ── Mobile (≤480px) ── */
 @media (max-width: 480px) {
-  .container { padding: 0 var(--space-sm); }
+  .container { padding: 0 14px; }
   h1 { font-size: 1.5rem !important; }
   h2 { font-size: 1.3rem !important; }
   h3 { font-size: 1rem !important; }
@@ -338,6 +357,25 @@ select.input { cursor: pointer; }
   .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
   .card { padding: var(--space-md); border-radius: var(--radius-md); }
   .input { padding: 10px 14px; font-size: 0.9rem; }
+}
+
+@media (hover: none) {
+  .card:hover,
+  .btn:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ── Scrollbar ── */
