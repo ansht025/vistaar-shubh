@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "vite preview --host 0.0.0.0 --port $PORT"
+    "start": "npx serve dist -s -l $PORT"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -19,7 +19,8 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.15.0",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.13",
+    "serve": "^14.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
