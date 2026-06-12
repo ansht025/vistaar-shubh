@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
-import { orderAPI, designAPI } from '../api/client';
+import { orderAPI, designAPI, resolveAssetUrl } from '../api/client';
 import './DashboardPage.css';
 
 export default function DashboardPage() {
@@ -59,7 +59,7 @@ export default function DashboardPage() {
             <div className="empty-state card"><p>No saved designs</p></div>
           ) : designs.map((d) => (
             <div key={d.id} className="saved-design card">
-              {d.preview_url && <img src={d.preview_url} alt={d.name} />}
+              {d.preview_url && <img src={resolveAssetUrl(d.preview_url)} alt={d.name} />}
               <h4>{d.name}</h4>
               <span className="design-date">{new Date(d.created_at).toLocaleDateString()}</span>
             </div>

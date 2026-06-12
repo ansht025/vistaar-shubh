@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Canvas, FabricImage, Rect, Textbox, Circle, Path, Polygon, Triangle } from 'fabric';
 import useStore from '../store/useStore';
-import { designAPI } from '../api/client';
+import { designAPI, resolveAssetUrl } from '../api/client';
 import { 
   RotateCcw, Undo2, Redo2, Trash2, Sliders, Layers, FlipHorizontal, Copy,
   LayoutTemplate, Type, Palette, UploadCloud, Square, Images, Video, QrCode, PlayCircle, Code, Share2, Save, Download, Printer
@@ -55,16 +55,6 @@ export default function EditorPage() {
   const historyRef = useRef({ stack: [], index: -1 });
   const isUndoingRedoing = useRef(false);
   const canvasDisposedRef = useRef(false);
-
-  const apiOrigin = import.meta.env.VITE_API_ORIGIN || 'http://localhost:8000';
-  const resolveAssetUrl = (url) => {
-    if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
-      return url;
-    }
-    if (url.startsWith('/static/')) return `${apiOrigin}${url}`;
-    return url;
-  };
 
   const saveHistoryState = () => {
     const canvas = fabricRef.current;

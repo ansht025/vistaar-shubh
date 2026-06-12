@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
+import { resolveAssetUrl } from '../api/client';
 import './CartPage.css';
 
 export default function CartPage() {
@@ -23,7 +24,7 @@ export default function CartPage() {
               <div key={item.cartId} className="cart-item card">
                 <div className="cart-item-preview">
                   {item.design?.preview_url ? (
-                    <img src={item.design.preview_url} alt={item.design.name} />
+                    <img src={resolveAssetUrl(item.design.preview_url)} alt={item.design.name} />
                   ) : (
                     <div className="preview-placeholder">🎨</div>
                   )}

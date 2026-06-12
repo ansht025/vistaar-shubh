@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
-import { adminAPI, productAPI } from '../api/client';
+import { adminAPI, productAPI, resolveAssetUrl } from '../api/client';
 import './AdminPage.css';
 
 export default function AdminPage() {
@@ -323,7 +323,7 @@ export default function AdminPage() {
                 .map(d => (
                   <div key={d.id} className="design-thumb-card glass">
                     <div className="thumb-image-wrapper">
-                      <img src={d.preview_url || '/placeholder.png'} alt={d.name} />
+                      <img src={resolveAssetUrl(d.preview_url) || '/placeholder.png'} alt={d.name} />
                     </div>
                     <div className="thumb-info">
                       <h4>{d.name || 'Untitled Label'}</h4>

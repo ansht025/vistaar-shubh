@@ -1,6 +1,18 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '' });
+export const API_ORIGIN = import.meta.env.VITE_API_ORIGIN || '';
+
+export const resolveAssetUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
+  if (url.startsWith('/static/')) return `${API_ORIGIN}${url}`;
+  if (url.startsWith('static/')) return `${API_ORIGIN}/${url}`;
+  return url;
+};
+
+const api = axios.create({ baseURL: API_ORIGIN });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('vistaarwater_token');

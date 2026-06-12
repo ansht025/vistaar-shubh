@@ -143,7 +143,7 @@ export default function EditorPage() {
       if (headline && incoming.name) headline.set({ text: String(incoming.name).toUpperCase().slice(0, 42) });
 
       const previewUrl = String(incoming.preview_url || '');
-      const absoluteUrl = previewUrl.startsWith('/static/') ? `http://localhost:8000${previewUrl}` : previewUrl;
+      const absoluteUrl = previewUrl.startsWith('/static/') ? `${backendUrl}${previewUrl}` : previewUrl;
       if (absoluteUrl) {
         const image = await FabricImage.fromURL(absoluteUrl, { crossOrigin: 'anonymous' });
         image.set({ left: 120, top: 120, selectable: false, evented: false, name: 'Main Handoff Preview' });
