@@ -22,7 +22,20 @@ def _read_env_file(key: str, default: str = "") -> str:
     return default
 
 # Database
-DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'vistaarwater.db'}")
+# Prefer individual PG connection variables (provided by Railway's database
+# service) over a pre-built DATABASE_URL reference, which may not resolve at
+# import time and would leave the variable empty.
+_PGHOST = os.getenv("PGHOST", "")
+if _PGHOST:
+    _PGUSER = os.getenv("PGUSER", "")
+    _PGPASSWORD = os.getenv("PGPASSWORD", "")
+    _PGPORT = os.getenv("PGPORT", "5432")
+    _PGDATABASE = os.getenv("PGDATABASE", "")
+    DATABASE_URL = (
+        f"postgresql+psycopg2://{_PGUSER}:{_PGPASSWORD}@{_PGHOST}:{_PGPORT}/{_PGDATABASE}"
+    )
+else:
+    DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'vistaarwater.db'}")
 
 # JWT Settings
 SECRET_KEY = os.getenv("SECRET_KEY", _read_env_file("SECRET_KEY", "dev-only-change-me"))
