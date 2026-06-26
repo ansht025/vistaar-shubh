@@ -1,11 +1,14 @@
 services:
   # 1. FastAPI Python Backend
   - type: web
+    runtime: python
     name: vistaar-backend
-    env: python
+    plan: free
+    region: singapore
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    autoDeployTrigger: commit
     domains:
       - api.vistaarwater.in
     envVars:
@@ -34,12 +37,14 @@ services:
         sync: false
 
   # 2. React Vite Frontend (Static Site)
-  - type: static
+  - type: web
+    runtime: static
     name: vistaar-frontend
-    env: static
+    plan: free
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     publishPath: dist
+    autoDeployTrigger: commit
     domains:
       - vistaarwater.in
       - www.vistaarwater.in
@@ -66,11 +71,14 @@ services:
 
   # 3. Next.js Studio Portal (Node Web Service)
   - type: web
+    runtime: node
     name: vistaar-studio
-    env: node
+    plan: free
+    region: singapore
     rootDir: studio-next
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: npm run start
+    autoDeployTrigger: commit
     domains:
       - studio.vistaarwater.in
     envVars:
@@ -85,3 +93,4 @@ services:
 databases:
   - name: vistaar-db
     plan: free
+    region: singapore
