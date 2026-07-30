@@ -10,7 +10,6 @@ export default function DesignCard({ design }) {
   const cardRef = useRef(null);
   const customizeBtnRef = useRef(null);
   const quickBtnRef = useRef(null);
-  const studioEditorUrl = import.meta.env.VITE_STUDIO_EDITOR_URL || 'http://localhost:3000/editor';
 
   useEffect(() => {
     if (cardRef.current) cardTilt3D(cardRef.current, 6);

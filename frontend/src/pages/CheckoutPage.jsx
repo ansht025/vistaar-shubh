@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 import './CheckoutPage.css';
 
@@ -8,15 +8,17 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState('address'); // address | payment | success
   const [address, setAddress] = useState({ line1: '', city: '', state: '', pincode: '', phone: '' });
+  const [orderId, setOrderId] = useState('');
 
   const total = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
 
   const handlePlaceOrder = () => {
+    setOrderId(`VIS-${Date.now().toString().slice(-6)}`);
     setStep('success');
     setTimeout(() => clearCart(), 1000);
   };
 
-  if (!user) { navigate('/login'); return null; }
+  if (!user) return <Navigate to="/login" replace />;
 
   if (step === 'success') {
     return (
@@ -25,7 +27,7 @@ export default function CheckoutPage() {
           <div className="success-icon">🎉</div>
           <h2>Order Placed Successfully!</h2>
           <p>Thank you for your order. We'll start production right away.</p>
-          <p className="order-id">Order #VIS-{Date.now().toString().slice(-6)}</p>
+          <p className="order-id">Order #{orderId}</p>
           <div className="success-actions">
             <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>View Dashboard</button>
             <button className="btn btn-ghost" onClick={() => navigate('/')}>Design More</button>

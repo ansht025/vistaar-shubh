@@ -6,7 +6,6 @@ import './Navbar.css';
 
 export default function Navbar() {
   const { user, cart, logout } = useStore();
-  const studioDashboardUrl = import.meta.env.VITE_STUDIO_DASHBOARD_URL || 'http://localhost:3000/dashboard';
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,19 +27,6 @@ export default function Navbar() {
   }, [cart.length]);
 
   const handleLogout = () => { logout(); navigate('/'); };
-  const openStudioDashboard = () => {
-    localStorage.setItem(
-      'vistaarwater_studio_handoff_user',
-      JSON.stringify({
-        source: 'main-frontend',
-        user,
-        cartCount: cart.length,
-        sentAt: new Date().toISOString(),
-      }),
-    );
-    window.location.href = studioDashboardUrl;
-  };
-
   return (
     <nav className="navbar glass" ref={navRef}>
       <div className="container navbar-inner">
@@ -49,7 +35,13 @@ export default function Navbar() {
           <span className="brand-text">Vist<span className="gradient-text">aarWater</span></span>
         </Link>
 
-        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+        <button
+          className="menu-toggle"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          type="button"
+        >
           <span className={`hamburger ${menuOpen ? 'active' : ''}`} />
         </button>
 

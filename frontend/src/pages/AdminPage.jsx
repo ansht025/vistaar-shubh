@@ -16,15 +16,7 @@ export default function AdminPage() {
   const [allDesigns, setAllDesigns] = useState([]);
   const [viewUserDesigns, setViewUserDesigns] = useState(null);
 
-  useEffect(() => {
-    if (!user || user.role !== 'admin') {
-      navigate('/');
-      return;
-    }
-    loadData();
-  }, [user]);
-
-  const loadData = async () => {
+  async function loadData() {
     try {
       const [o, p, i, u, m, d] = await Promise.all([
         adminAPI.getOrders(),
@@ -43,7 +35,15 @@ export default function AdminPage() {
     } catch (err) {
       console.error("Failed to load admin dashboard data", err);
     }
-  };
+  }
+
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      navigate('/');
+      return;
+    }
+    loadData();
+  }, [user, navigate]);
 
   const updateOrderStatus = async (id, status) => {
     try {
