@@ -38,7 +38,12 @@ elif os.getenv("POSTGRES_URL"):
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
 else:
-    DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'vistaarwater.db'}")
+    if os.getenv("VERCEL"):
+        # Vercel's file system is read-only except for /tmp.
+        # This allows the app to start, but data will be ephemeral!
+        DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////tmp/vistaarwater.db")
+    else:
+        DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'vistaarwater.db'}")
 
 # JWT Settings
 SECRET_KEY = os.getenv("SECRET_KEY", _read_env_file("SECRET_KEY", "dev-only-change-me"))

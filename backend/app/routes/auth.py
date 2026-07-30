@@ -87,7 +87,7 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
 
     user = User(
         email=data.email,
-        password_hash=hash_password(data.password),
+        password_hash=hash_password(data.password) if data.password else "",
         business_name=data.business_name,
         phone=data.phone,
     )
@@ -109,7 +109,7 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
 def login(data: UserLogin, db: Session = Depends(get_db)):
     """Login with email and password. Admin gets instant access; users need OTP."""
     user = db.query(User).filter(User.email == data.email).first()
-    if not user or not verify_password(data.password, user.password_hash):
+    if not user or not data.password or not verify_password(data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     if user.is_suspended:
