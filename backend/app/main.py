@@ -6,7 +6,10 @@ from app.database import engine, Base
 from app.routes import auth, designs, orders, products, inquiries, admin
 
 # Create all tables
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"Error creating tables: {e}")
 
 # Run migration check
 try:
