@@ -16,6 +16,8 @@ backend/vistaarwater.db
 
 # Build artifacts
 frontend/dist/
+studio-next/.next/
+.venv_test/
 
 # Local configuration files
 .env
