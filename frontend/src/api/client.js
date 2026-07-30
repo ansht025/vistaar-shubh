@@ -15,6 +15,10 @@ export const resolveAssetUrl = (url) => {
 const api = axios.create({ baseURL: API_ORIGIN });
 
 api.interceptors.request.use((config) => {
+  if (import.meta.env.PROD && !API_ORIGIN && config.url?.startsWith('/api/')) {
+    alert("CRITICAL ERROR: VITE_API_ORIGIN environment variable is not set in Vercel. Please set it to your backend URL.");
+    return Promise.reject(new Error("VITE_API_ORIGIN is missing."));
+  }
   const token = localStorage.getItem('vistaarwater_token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
