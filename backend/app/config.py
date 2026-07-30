@@ -56,7 +56,7 @@ FRONTEND_URLS = [
     url.strip()
     for url in os.getenv(
         "FRONTEND_URLS",
-        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173",
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173,https://vistaar-shubh.vercel.app,https://vistaar-shubh-di0mfxal9-ansht025s-projects.vercel.app",
     ).split(",")
     if url.strip()
 ]
