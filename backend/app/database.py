@@ -8,10 +8,12 @@ if db_url.startswith("postgres://"):
 elif db_url.startswith("postgresql://"):
     db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
+from sqlalchemy.pool import NullPool
+
 if db_url.startswith("sqlite"):
     engine = create_engine(db_url, connect_args={"check_same_thread": False})
 else:
-    engine = create_engine(db_url)
+    engine = create_engine(db_url, poolclass=NullPool)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
