@@ -25,6 +25,10 @@ class VerifyOTPRequest(BaseModel):
     otp_code: str
 
 
+class GoogleAuthRequest(BaseModel):
+    credential: str  # Google ID token
+
+
 class UserResponse(BaseModel):
     id: int
     email: str

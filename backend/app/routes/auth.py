@@ -1,12 +1,16 @@
 import random
+import json
+import urllib.request
+import urllib.error
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User, OTP
-from app.schemas import UserRegister, UserLogin, UserResponse, TokenResponse, SendOTPRequest, VerifyOTPRequest
+from app.schemas import UserRegister, UserLogin, UserResponse, TokenResponse, SendOTPRequest, VerifyOTPRequest, GoogleAuthRequest
 from app.auth import hash_password, verify_password, create_access_token, get_current_user
 from app.services.email_service import send_otp_email
+from app.config import GOOGLE_CLIENT_ID
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -132,3 +136,45 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
 def get_me(current_user: User = Depends(get_current_user)):
     """Get current user profile."""
     return UserResponse.model_validate(current_user)
+
+
+@router.post("/google")
+def google_auth(data: GoogleAuthRequest, db: Session = Depends(get_db)):
+    """Authenticate via Google. Verifies the ID token and creates/logs in the user."""
+    # Verify token with Google
+    try:
+        url = f"https://oauth2.googleapis.com/tokeninfo?id_token={data.credential}"
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=10) as response:
+            payload = json.loads(response.read().decode())
+    except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError) as e:
+        raise HTTPException(status_code=401, detail=f"Invalid Google token: {e}")
+
+    # Verify audience matches our client ID (if configured)
+    if GOOGLE_CLIENT_ID and payload.get("aud") != GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=401, detail="Token audience mismatch")
+
+    email = payload.get("email")
+    if not email or not payload.get("email_verified", False):
+        raise HTTPException(status_code=401, detail="Google email not verified")
+
+    # Find or create user
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        user = User(
+            email=email,
+            password_hash=hash_password(payload.get("sub", "")),  # random hash, user logs in via Google
+            business_name=payload.get("name", ""),
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    if user.is_suspended:
+        raise HTTPException(status_code=403, detail="User account is suspended")
+
+    token = create_access_token({"sub": str(user.id)})
+    return TokenResponse(
+        access_token=token,
+        user=UserResponse.model_validate(user),
+    ).model_dump()

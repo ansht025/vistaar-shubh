@@ -36,6 +36,7 @@ export const authAPI = {
   login: (data) => api.post('/api/auth/login', data),
   sendOtp: (data) => api.post('/api/auth/send-otp', data),
   verifyOtp: (data) => api.post('/api/auth/verify-otp', data),
+  googleLogin: (data) => api.post('/api/auth/google', data),
   getMe: () => api.get('/api/auth/me'),
 };
 

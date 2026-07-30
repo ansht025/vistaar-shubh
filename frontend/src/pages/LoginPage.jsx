@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import gsap from 'gsap';
-import { authAPI, designAPI } from '../api/client';
+import { authAPI, designAPI, API_ORIGIN } from '../api/client';
 import useStore from '../store/useStore';
 import './AuthPages.css';
 
@@ -165,6 +165,56 @@ export default function LoginPage() {
       setGlobalLoading(false);
       return false;
     }
+  };
+
+  // ── Google Sign-In ──
+  const handleGoogleLogin = () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      setError('Google Sign-In is not configured yet.');
+      return;
+    }
+
+    if (!window.google?.accounts?.id) {
+      setError('Google Sign-In is still loading. Please try again.');
+      return;
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: async (response) => {
+        setError('');
+        setLoading(true);
+        try {
+          const res = await authAPI.googleLogin({ credential: response.credential });
+          setAuth(res.data.user, res.data.access_token);
+          const handled = await handlePendingDesign();
+          if (!handled) {
+            navigate(res.data.user?.role === 'admin' ? '/admin' : '/dashboard');
+          }
+        } catch (err) {
+          setError(err.response?.data?.detail || 'Google login failed');
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
+
+    window.google.accounts.id.prompt((notification) => {
+      // If One Tap is dismissed or skipped, fallback to popup
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        window.google.accounts.id.renderButton(
+          document.createElement('div'),
+          { theme: 'filled_black', size: 'large' }
+        );
+        // Use the popup method instead
+        window.google.accounts.oauth2.initCodeClient({
+          client_id: clientId,
+          scope: 'email profile',
+          callback: () => {},
+        });
+      }
+    });
   };
 
   // ── Login submit ──
@@ -351,7 +401,7 @@ export default function LoginPage() {
               {loading ? <><span className="auth-btn-spinner" /> Signing in...</> : 'Sign In'}
             </button>
             <div className="auth-divider"><span>or continue with</span></div>
-            <button type="button" className="auth-google-btn" onClick={() => alert('Google OAuth coming soon!')}>
+            <button type="button" className="auth-google-btn" onClick={handleGoogleLogin} disabled={loading}>
               <GoogleIcon /> Continue with Google
             </button>
           </form>
