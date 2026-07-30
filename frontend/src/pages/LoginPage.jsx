@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import gsap from 'gsap';
-import { authAPI } from '../api/client';
+import { authAPI, designAPI } from '../api/client';
 import useStore from '../store/useStore';
 import './AuthPages.css';
 
@@ -20,7 +20,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
-  const { setAuth } = useStore();
+  const { setAuth, setGeneratedDesigns, setDesignInput, setLoading: setGlobalLoading } = useStore();
   const navigate = useNavigate();
 
   // OTP
@@ -145,6 +145,28 @@ export default function LoginPage() {
     tl.fromTo(demoRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25 }, '<');
   }, []);
 
+  // ── Handle pending design generation after login ──
+  const handlePendingDesign = async () => {
+    const pendingRaw = localStorage.getItem('vistaarwater_pending_design');
+    if (!pendingRaw) return false;
+    try {
+      const pendingForm = JSON.parse(pendingRaw);
+      localStorage.removeItem('vistaarwater_pending_design');
+      setGlobalLoading(true);
+      const res = await designAPI.generate(pendingForm);
+      setGeneratedDesigns(res.data.designs);
+      setDesignInput(pendingForm);
+      setGlobalLoading(false);
+      navigate('/designs');
+      return true;
+    } catch (err) {
+      console.error('Pending design generation failed:', err);
+      localStorage.removeItem('vistaarwater_pending_design');
+      setGlobalLoading(false);
+      return false;
+    }
+  };
+
   // ── Login submit ──
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -157,7 +179,11 @@ export default function LoginPage() {
         animateToOtp();
       } else {
         setAuth(res.data.user, res.data.access_token);
-        navigate(res.data.user?.role === 'admin' ? '/admin' : '/dashboard');
+        // Check for pending design first
+        const handled = await handlePendingDesign();
+        if (!handled) {
+          navigate(res.data.user?.role === 'admin' ? '/admin' : '/dashboard');
+        }
       }
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed');
@@ -186,7 +212,11 @@ export default function LoginPage() {
     try {
       const res = await authAPI.verifyOtp({ email: otpEmail, otp_code: code });
       setAuth(res.data.user, res.data.access_token);
-      gsap.to(cardRef.current, { scale: 0.97, opacity: 0, duration: 0.35, ease: 'power2.in', onComplete: () => navigate('/dashboard') });
+      // Check for pending design first
+      const handled = await handlePendingDesign();
+      if (!handled) {
+        gsap.to(cardRef.current, { scale: 0.97, opacity: 0, duration: 0.35, ease: 'power2.in', onComplete: () => navigate('/dashboard') });
+      }
     } catch (err) {
       setError(err.response?.data?.detail || 'Invalid OTP');
       gsap.fromTo('.otp-inputs', { x: -5 }, { x: 5, duration: 0.07, repeat: 5, yoyo: true, ease: 'power1.inOut' });
@@ -350,7 +380,7 @@ export default function LoginPage() {
           </div>
 
           <p className="auth-footer" ref={footerRef} style={{ display: step === 'credentials' ? 'block' : 'none' }}>Don't have an account? <Link to="/register">Create one</Link></p>
-          <p className="auth-demo" ref={demoRef} style={{ display: step === 'credentials' ? 'block' : 'none' }}>Admin: admin@vistaarwater.com / admin123</p>
+
         </div>
       </div>
     </div>

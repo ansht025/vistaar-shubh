@@ -8,7 +8,7 @@ import './HeroSection.css';
 
 export default function HeroSection() {
   const navigate = useNavigate();
-  const { setGeneratedDesigns, setDesignInput, setLoading } = useStore();
+  const { setGeneratedDesigns, setDesignInput, setLoading, user, token } = useStore();
   const heroRef = useRef(null);
   const sceneRef = useRef(null);
   const mainBottleRef = useRef(null);
@@ -116,6 +116,14 @@ export default function HeroSection() {
   const handleGenerate = async (e) => {
     e.preventDefault();
     if (!form.business_name.trim()) return;
+
+    // If user is not logged in, save form data and redirect to login
+    if (!user || !token) {
+      localStorage.setItem('vistaarwater_pending_design', JSON.stringify(form));
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await designAPI.generate(form);
