@@ -32,6 +32,11 @@ if _PGHOST:
     DATABASE_URL = (
         f"postgresql+psycopg2://{_PGUSER}:{_PGPASSWORD}@{_PGHOST}:{_PGPORT}/{_PGDATABASE}"
     )
+elif os.getenv("POSTGRES_URL"):
+    # Vercel Postgres support
+    DATABASE_URL = os.getenv("POSTGRES_URL")
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
 else:
     DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'vistaarwater.db'}")
 
