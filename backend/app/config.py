@@ -37,6 +37,9 @@ elif os.getenv("POSTGRES_URL"):
     DATABASE_URL = os.getenv("POSTGRES_URL")
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+    if "sslmode=" not in DATABASE_URL:
+        separator = "&" if "?" in DATABASE_URL else "?"
+        DATABASE_URL += f"{separator}sslmode=require"
 else:
     if os.getenv("VERCEL"):
         # Vercel's file system is read-only except for /tmp.
