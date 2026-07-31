@@ -7,13 +7,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 try:
     from app.main import app
 except Exception as _import_error:
-    # If there's a startup crash, expose a diagnostic app instead of showing a blank 500
     import traceback
     _tb = traceback.format_exc()
     from fastapi import FastAPI as _FastAPI
     app = _FastAPI()
 
-    @app.get("/{full_path:path}")
+    @app.api_route("/{full_path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
     def _error_handler(full_path: str = ""):
         return {
             "error": "App failed to start",
