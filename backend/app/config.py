@@ -59,9 +59,12 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 GENERATED_DIR = STATIC_DIR / "generated"
 UPLOADS_DIR = STATIC_DIR / "uploads"
 
-# Create directories if they don't exist
+# Create directories if they don't exist (may fail on read-only filesystems like Vercel)
 for dir_path in [STATIC_DIR, TEMPLATES_DIR, GENERATED_DIR, UPLOADS_DIR]:
-    dir_path.mkdir(parents=True, exist_ok=True)
+    try:
+        dir_path.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
 
 # CORS
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")

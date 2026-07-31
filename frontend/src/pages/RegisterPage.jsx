@@ -41,13 +41,26 @@ export default function RegisterPage() {
 
   // ── GSAP ──
   useEffect(() => {
+    // Set initial positions before animating
+    if (cardRef.current) gsap.set(cardRef.current, { opacity: 0, y: 24 });
+    if (brandRef.current) gsap.set(brandRef.current, { opacity: 0, y: 10 });
+    if (headingRef.current) gsap.set(headingRef.current, { opacity: 0, y: 10 });
+    if (subtitleRef.current) gsap.set(subtitleRef.current, { opacity: 0, y: 8 });
+    if (formRef.current) gsap.set(formRef.current, { opacity: 0, y: 14 });
+    if (footerRef.current) gsap.set(footerRef.current, { opacity: 0 });
+    if (taglineRef.current) gsap.set(taglineRef.current, { opacity: 0, y: 14 });
+    if (h1Ref.current) gsap.set(h1Ref.current, { opacity: 0, y: 20 });
+    if (descRef.current) gsap.set(descRef.current, { opacity: 0, y: 14 });
+    if (tmplRowRef.current) gsap.set(tmplRowRef.current, { opacity: 0, y: 18 });
+    if (trustRef.current) gsap.set(trustRef.current, { opacity: 0, y: 12 });
+
     const ctx = gsap.context(() => {
       const ltl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      ltl.to(taglineRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
-      ltl.to(h1Ref.current, { opacity: 1, y: 0, duration: 0.6 }, 0.25);
-      ltl.to(descRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.4);
-      ltl.to(tmplRowRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.5);
-      ltl.to(trustRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.65);
+      if (taglineRef.current) ltl.to(taglineRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
+      if (h1Ref.current) ltl.to(h1Ref.current, { opacity: 1, y: 0, duration: 0.6 }, 0.25);
+      if (descRef.current) ltl.to(descRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.4);
+      if (tmplRowRef.current) ltl.to(tmplRowRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.5);
+      if (trustRef.current) ltl.to(trustRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.65);
 
       floatRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -60,27 +73,14 @@ export default function RegisterPage() {
       });
 
       const rtl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      rtl.to(cardRef.current, { opacity: 1, y: 0, duration: 0.65 }, 0.3);
-      rtl.to(brandRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.55);
-      rtl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.45 }, 0.65);
-      rtl.to(subtitleRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.75);
-      rtl.to(formRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.8);
-      rtl.to(footerRef.current, { opacity: 1, duration: 0.35 }, 1);
+      if (cardRef.current) rtl.to(cardRef.current, { opacity: 1, y: 0, duration: 0.65 }, 0.3);
+      if (brandRef.current) rtl.to(brandRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.55);
+      if (headingRef.current) rtl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.45 }, 0.65);
+      if (subtitleRef.current) rtl.to(subtitleRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.75);
+      if (formRef.current) rtl.to(formRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.8);
+      if (footerRef.current) rtl.to(footerRef.current, { opacity: 1, duration: 0.35 }, 1);
     }, pageRef);
     return () => ctx.revert();
-  }, []);
-
-  useEffect(() => {
-    if (cardRef.current) gsap.set(cardRef.current, { y: 24 });
-    if (brandRef.current) gsap.set(brandRef.current, { y: 10 });
-    if (headingRef.current) gsap.set(headingRef.current, { y: 10 });
-    if (subtitleRef.current) gsap.set(subtitleRef.current, { y: 8 });
-    if (formRef.current) gsap.set(formRef.current, { y: 14 });
-    if (taglineRef.current) gsap.set(taglineRef.current, { y: 14 });
-    if (h1Ref.current) gsap.set(h1Ref.current, { y: 20 });
-    if (descRef.current) gsap.set(descRef.current, { y: 14 });
-    if (tmplRowRef.current) gsap.set(tmplRowRef.current, { y: 18 });
-    if (trustRef.current) gsap.set(trustRef.current, { y: 12 });
   }, []);
 
   useEffect(() => {

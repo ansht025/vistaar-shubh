@@ -89,8 +89,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static files
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+# Static files (may not exist on Vercel – skip gracefully)
+try:
+    from pathlib import Path
+    if Path(str(STATIC_DIR)).exists():
+        app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+except Exception as e:
+    print(f"Warning: Could not mount static files: {e}")
 
 # Include routes
 app.include_router(auth.router)
