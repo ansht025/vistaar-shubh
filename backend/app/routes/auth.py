@@ -36,15 +36,17 @@ def _generate_and_send_otp(email: str, db: Session) -> str:
 @router.post("/send-otp")
 def send_otp(data: SendOTPRequest, db: Session = Depends(get_db)):
     """Generate and send a 6-digit OTP to the provided email."""
-    _generate_and_send_otp(data.email, db)
+    email_clean = data.email.strip().lower()
+    _generate_and_send_otp(email_clean, db)
     return {"message": "OTP sent successfully to email"}
 
 
 @router.post("/verify-otp", response_model=TokenResponse)
 def verify_otp(data: VerifyOTPRequest, db: Session = Depends(get_db)):
     """Verify OTP and return auth token."""
+    email_clean = data.email.strip().lower()
     otp_record = db.query(OTP).filter(
-        OTP.email == data.email,
+        OTP.email == email_clean,
         OTP.otp_code == data.otp_code,
         OTP.is_used == False,
         OTP.expires_at > datetime.utcnow()
@@ -58,12 +60,10 @@ def verify_otp(data: VerifyOTPRequest, db: Session = Depends(get_db)):
     db.commit()
 
     # Find or create user
-    user = db.query(User).filter(User.email == data.email).first()
+    user = db.query(User).filter(User.email == email_clean).first()
     if not user:
-        user = User(
-            email=data.email,
-            password_hash=hash_password(data.otp_code)
-        )
+        # Should normally be created in /register, but fallback just in case
+        user = User(email=email_clean, password_hash="")
         db.add(user)
         db.commit()
         db.refresh(user)
@@ -81,12 +81,13 @@ def verify_otp(data: VerifyOTPRequest, db: Session = Depends(get_db)):
 @router.post("/register")
 def register(data: UserRegister, db: Session = Depends(get_db)):
     """Register a new user. Sends OTP for verification before granting access."""
-    existing = db.query(User).filter(User.email == data.email).first()
+    email_clean = data.email.strip().lower()
+    existing = db.query(User).filter(User.email == email_clean).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
     user = User(
-        email=data.email,
+        email=email_clean,
         password_hash=hash_password(data.password) if data.password else "",
         business_name=data.business_name,
         phone=data.phone,
@@ -96,19 +97,20 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
     db.refresh(user)
 
     # Send OTP instead of returning token
-    _generate_and_send_otp(data.email, db)
+    _generate_and_send_otp(email_clean, db)
     
     return {
         "message": "Registration successful. OTP sent to your email.",
         "requires_otp": True,
-        "email": data.email,
+        "email": email_clean,
     }
 
 
 @router.post("/login")
 def login(data: UserLogin, db: Session = Depends(get_db)):
     """Login with email and password. Admin gets instant access; users need OTP."""
-    user = db.query(User).filter(User.email == data.email).first()
+    email_clean = data.email.strip().lower()
+    user = db.query(User).filter(User.email == email_clean).first()
     if not user or not data.password or not verify_password(data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
