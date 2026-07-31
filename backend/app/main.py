@@ -114,3 +114,30 @@ def root():
 @app.get("/api/health")
 def health():
     return {"status": "healthy"}
+
+
+@app.get("/api/debug")
+def debug():
+    """Debug endpoint to check DB connectivity and environment (remove in production)."""
+    import os
+    from app.config import DATABASE_URL
+    from app.database import engine
+    db_type = "sqlite" if "sqlite" in DATABASE_URL else "postgres"
+    db_status = "unknown"
+    db_error = None
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        db_status = "connected"
+    except Exception as e:
+        db_status = "error"
+        db_error = str(e)
+    return {
+        "db_type": db_type,
+        "db_status": db_status,
+        "db_error": db_error,
+        "has_postgres_url": bool(os.getenv("POSTGRES_URL")),
+        "has_pghost": bool(os.getenv("PGHOST")),
+        "vercel": bool(os.getenv("VERCEL")),
+    }

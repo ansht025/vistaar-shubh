@@ -6,5 +6,5 @@ python-jose[cryptography]==3.3.0
 Pillow==10.4.0
 python-multipart==0.0.9
 aiofiles==24.1.0
-psycopg2-binary>=2.9.9
+pg8000>=1.31.0
 bcrypt==4.0.1
