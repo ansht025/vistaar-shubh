@@ -1,7 +1,10 @@
+import hashlib
+import hmac
+import os
+import secrets
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
@@ -10,13 +13,19 @@ from app.database import get_db
 from app.models import User
 
 security = HTTPBearer()
-import bcrypt
+
+# ── Password hashing using stdlib hashlib (no compiled deps needed) ──
 
 def hash_password(password: str) -> str:
-    """Hash a password using bcrypt."""
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed.decode('utf-8')
+    """Hash a password using PBKDF2-HMAC-SHA256 (Python stdlib, no external deps)."""
+    salt = secrets.token_hex(16)
+    dk = hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode('utf-8'),
+        salt.encode('utf-8'),
+        iterations=260000,
+    )
+    return f"pbkdf2$sha256$260000${salt}${dk.hex()}"
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -24,8 +33,28 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     if not hashed_password:
         return False
     try:
-        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-    except ValueError:
+        if hashed_password.startswith("pbkdf2$"):
+            # New format: pbkdf2$sha256$iterations$salt$hash
+            parts = hashed_password.split("$")
+            if len(parts) != 5:
+                return False
+            _, algo, iterations, salt, stored_hash = parts
+            dk = hashlib.pbkdf2_hmac(
+                algo,
+                plain_password.encode('utf-8'),
+                salt.encode('utf-8'),
+                iterations=int(iterations),
+            )
+            return hmac.compare_digest(dk.hex(), stored_hash)
+        elif hashed_password.startswith("$2b$") or hashed_password.startswith("$2a$"):
+            # Legacy bcrypt hash — try bcrypt if available, else reject
+            try:
+                import bcrypt
+                return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+            except ImportError:
+                return False
+        return False
+    except Exception:
         return False
 
 
