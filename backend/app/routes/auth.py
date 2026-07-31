@@ -126,11 +126,11 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
         ).model_dump()
 
     # Regular user: send OTP
-    _generate_and_send_otp(data.email, db)
+    _generate_and_send_otp(email_clean, db)
     return {
         "message": "OTP sent to your email.",
         "requires_otp": True,
-        "email": data.email,
+        "email": email_clean,
     }
 
 

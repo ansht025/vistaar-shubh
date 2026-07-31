@@ -71,16 +71,16 @@ export default function RegisterPage() {
   }, []);
 
   useEffect(() => {
-    gsap.set(cardRef.current, { y: 24 });
-    gsap.set(brandRef.current, { y: 10 });
-    gsap.set(headingRef.current, { y: 10 });
-    gsap.set(subtitleRef.current, { y: 8 });
-    gsap.set(formRef.current, { y: 14 });
-    gsap.set(taglineRef.current, { y: 14 });
-    gsap.set(h1Ref.current, { y: 20 });
-    gsap.set(descRef.current, { y: 14 });
-    gsap.set(tmplRowRef.current, { y: 18 });
-    gsap.set(trustRef.current, { y: 12 });
+    if (cardRef.current) gsap.set(cardRef.current, { y: 24 });
+    if (brandRef.current) gsap.set(brandRef.current, { y: 10 });
+    if (headingRef.current) gsap.set(headingRef.current, { y: 10 });
+    if (subtitleRef.current) gsap.set(subtitleRef.current, { y: 8 });
+    if (formRef.current) gsap.set(formRef.current, { y: 14 });
+    if (taglineRef.current) gsap.set(taglineRef.current, { y: 14 });
+    if (h1Ref.current) gsap.set(h1Ref.current, { y: 20 });
+    if (descRef.current) gsap.set(descRef.current, { y: 14 });
+    if (tmplRowRef.current) gsap.set(tmplRowRef.current, { y: 18 });
+    if (trustRef.current) gsap.set(trustRef.current, { y: 12 });
   }, []);
 
   useEffect(() => {
